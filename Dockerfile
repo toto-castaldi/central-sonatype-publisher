@@ -16,5 +16,19 @@ RUN curl --insecure -fsSL https://archive.apache.org/dist/maven/maven-3/$MAVEN_V
 ENV MAVEN_HOME /usr/share/maven
 
 VOLUME /root/.m2
+VOLUME /root/.gnupg
 
-CMD ["mvn deploy"]
+RUN mkdir /data
+
+VOLUME /data
+
+WORKDIR /data
+
+COPY settings.xml /
+
+ENV GPG_PASSPHRASE=setit
+ENV SONATYPE_USERNAME=setit
+ENV SONATYPE_PASSWORD=setit
+ENV POM_NAME=pom.xml
+
+CMD ["sh", "-c", "mvn clean deploy --settings /settings.xml -P release-sign-artifacts -f ${POM_NAME}"]
