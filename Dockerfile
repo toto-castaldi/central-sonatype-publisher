@@ -30,5 +30,6 @@ ENV GPG_PASSPHRASE=setit
 ENV SONATYPE_USERNAME=setit
 ENV SONATYPE_PASSWORD=setit
 ENV POM_NAME=pom.xml
+ENV KEY_FILE_NAME=KEY.asc
 
-CMD ["sh", "-c", "mvn clean deploy --settings /settings.xml -P release-sign-artifacts -f ${POM_NAME}"]
+CMD ["sh", "-c", "gpg --import ${KEY_FILE_NAME} && mvn clean deploy --settings /settings.xml -P release-sign-artifacts -f ${POM_NAME}"]
